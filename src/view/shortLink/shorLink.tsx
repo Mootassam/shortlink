@@ -25,6 +25,7 @@ import {
 import LinkTable from "../TableView/LinkTable";
 import { Toaster } from "react-hot-toast";
 import { onAuthStateChanged } from "@firebase/auth";
+import Message from "../../modules/shared/Message";
 
 function ShortLink() {
   const [user] = useAuthState(auth);
@@ -95,12 +96,16 @@ function ShortLink() {
   const handletext = (event: any) => {
     const value = event.target.value;
     setUrl(value);
-  }; 
+  };
 
   // fix the  coor0100//
 
   const generateShortUrl = async () => {
-    dispatch(generateShortLink({ url, user }));
+    if (user) {
+      dispatch(generateShortLink({ url, user }));
+    } else {
+      Message.Error("Auth required");
+    }
   };
 
   const handleChange = (
@@ -113,7 +118,11 @@ function ShortLink() {
   };
 
   const SaveMultiLinks = async () => {
-    dispatch(generateShortMulti({ form, user }));
+    if (user) {
+      dispatch(generateShortMulti({ form, user }));
+    } else {
+      Message.Error("Auth required");
+    }
   };
 
   return (
