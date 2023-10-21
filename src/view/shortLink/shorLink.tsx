@@ -100,11 +100,35 @@ function ShortLink() {
 
   // fix the  coor0100//
 
+  function isValidURL(input) {
+    const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+    return urlPattern.test(input);
+  }
+
+  function validateAndTrimURL(url) {
+    const trimmedUrl = url.trim();
+
+    if (!isValidURL(trimmedUrl)) {
+      throw new Error("Invalid URL");
+    }
+
+    return trimmedUrl;
+  }
+
   const generateShortUrl = async () => {
-    if (user) {
-      dispatch(generateShortLink({ url, user }));
-    } else {
-      Message.Error("Auth required");
+    try {
+      if (!user) {
+        Message.Error("Please Login ");
+      }
+
+      const trimmedUrl = validateAndTrimURL(url);
+
+      // Assuming `dispatch` and `generateShortLink` are defined elsewhere
+      await dispatch(generateShortLink({ url: trimmedUrl, user }));
+    } catch (error) {
+      Message.Error(
+        "Please Verify your data its look like this format https//example.com "
+      );
     }
   };
 
@@ -118,10 +142,31 @@ function ShortLink() {
   };
 
   const SaveMultiLinks = async () => {
-    if (user) {
-      dispatch(generateShortMulti({ form, user }));
+    // Check if any of the form fields are empty
+    const isAnyEmpty = form.some((item) => item.link.trim() === "");
+
+    if (isAnyEmpty) {
+      Message.Error("Please fill in all form fields before saving.");
     } else {
-      Message.Error("Auth required");
+      // Check if all URLs in the form are valid
+      const areAllURLsValid = form.every((item) => {
+        try {
+          validateAndTrimURL(item.link);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      });
+
+      if (areAllURLsValid) {
+        if (user) {
+          dispatch(generateShortMulti({ form, user }));
+        } else {
+          Message.Error("Auth required");
+        }
+      } else {
+        Message.Error("Please enter valid URLs in all form fields.");
+      }
     }
   };
 
