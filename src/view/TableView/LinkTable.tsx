@@ -1,4 +1,4 @@
-import{ useState } from "react";
+import { useState } from "react";
 import QRCode from "react-qr-code";
 import Date from "../../modules/shared/date";
 
@@ -6,6 +6,7 @@ function LinkTable(props) {
   const { allLinks, loading, hasRows } = props;
   const [copySuccess, setCopySuccess] = useState(false);
   const [selected, setSelectedItem] = useState<any>();
+  const [lastAddedRowIndex, setLastAddedRowIndex] = useState(-1); // New state variable
 
   const handleCopy = (value: any, index: number) => {
     const el = document.createElement("textarea");
@@ -33,14 +34,15 @@ function LinkTable(props) {
             <td>Status</td>
             <td className="date__">
               Date
-              <img src="/date.png" alt="" />
+              <img src="/date.png" alt="date__" />
             </td>
+            <td>Action</td>
           </tr>
         </thead>
         {!loading && allLinks && hasRows > 0 && (
           <tbody>
             {allLinks?.map((item: any, i: number) => (
-              <tr key={i}>
+              <tr key={i} className={i === lastAddedRowIndex ? "newRow" : ""}>
                 <td className="td__detail">
                   {item.shortlink}
                   <div
@@ -79,11 +81,24 @@ function LinkTable(props) {
                   <span className="active">{item.status}</span>
                   <div className="link__active">
                     <a href={item.shortlink} target="__blank">
-                      <img src="/link1.png" alt="" />
+                      <img src="/link1.png" alt="link__active" />
                     </a>
                   </div>
                 </td>
                 <td>{Date.format(item.date)}</td>
+                <td className="actions__">
+                  <div className="edit">
+                    <img src="/edit.png" alt="edit__" width={16} height={16} />
+                  </div>
+                  <div className="delete">
+                    <img
+                      src="/delete.png"
+                      alt="delete__"
+                      width={16}
+                      height={16}
+                    />
+                  </div>
+                </td>
               </tr>
             ))}
 

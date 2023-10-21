@@ -349,6 +349,33 @@ tr {
   gap: 10px;
 }
 
+.actions__ {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.edit,
+.delete {
+  border-radius: 48px;
+  border: 1px solid #353c4a;
+  background: #181e29;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.delete:hover {
+  background-color: rgb(226, 113, 113);
+}
+.edit:hover {
+  background-color: orange;
+}
+
 .user__name {
   border-radius: 48px;
   border: 1px solid #353c4a;
@@ -439,7 +466,7 @@ tr {
 }
 
 .original__link {
-  max-width: 500px;
+  max-width: 400px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -723,9 +750,12 @@ tr {
   animation: spin 1s linear infinite;
 }
 
-
 .shorten {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+.newRow {
+  background-color: lightgreen; /* Set the background color to indicate the new row */
+  transition: background-color 0.5s; /* Define the transition effect */
 }
