@@ -7,12 +7,17 @@ import { AnyAction } from "redux";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import { deleteshortUrl } from "../../store/shortLink/shortLinkActions";
+import { deleteUrlLoading } from "../../store/shortLink/shortLinkSelectors";
 
 function LinkTable(props) {
   const { allLinks, loading, hasRows } = props;
 
   const [copySuccess, setCopySuccess] = useState(false);
   const [selected, setSelectedItem] = useState<any>();
+  const deleteLoadings = useSelector(deleteUrlLoading);
+
+  console.log("remove data", deleteLoadings);
+
   const [user] = useAuthState(auth);
   const dispatch: ThunkDispatch<any, void, AnyAction> = useDispatch();
   const handleCopy = (value: any, index: number) => {
@@ -105,12 +110,16 @@ function LinkTable(props) {
                     className="delete"
                     onClick={() => deleteUrl(item.id, user)}
                   >
-                    <img
-                      src="/delete.png"
-                      alt="delete__"
-                      width={16}
-                      height={16}
-                    />
+                    {deleteLoadings === true ? (
+                      <div className="spinnerdelete"></div>
+                    ) : (
+                      <img
+                        src="/delete.png"
+                        alt="delete__"
+                        width={16}
+                        height={16}
+                      />
+                    )}
                   </div>
                 </td>
               </tr>

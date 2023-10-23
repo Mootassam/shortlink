@@ -107,11 +107,9 @@ function ShortLink() {
 
   function validateAndTrimURL(url) {
     const trimmedUrl = url.trim();
-
     if (!isValidURL(trimmedUrl)) {
       throw new Error("Invalid URL");
     }
-
     return trimmedUrl;
   }
 
@@ -120,9 +118,7 @@ function ShortLink() {
       if (!user) {
         Message.Error("Please Login ");
       }
-
       const trimmedUrl = validateAndTrimURL(url);
-
       // Assuming `dispatch` and `generateShortLink` are defined elsewhere
       await dispatch(generateShortLink({ url: trimmedUrl, user }));
     } catch (error) {

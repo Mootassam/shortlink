@@ -8,16 +8,15 @@ const generateSlice = createSlice({
     multiLoading: false,
     showLoading: false,
     logoutLoading: false,
-    deleteLoading: false,
+    loadingremove: false,
     links: [],
   },
   reducers: {
     shortLoading: (state, actions) => {
       state.shortLoading = actions.payload;
     },
-
     deleteLoading: (state, actions) => {
-      state.deleteLoading = actions.payload;
+      state.loadingremove = actions.payload;
     },
     loginLoading: (state, actions) => {
       state.loginLoading = actions.payload;

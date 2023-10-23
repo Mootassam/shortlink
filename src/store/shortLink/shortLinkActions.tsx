@@ -91,8 +91,6 @@ export const LoginIn = createAsyncThunk<void, any>(
 export const deleteshortUrl = createAsyncThunk<void, any>(
   "url/delete",
   async (data, thunkAPI) => {
-    console.log("data data", data);
-
     try {
       thunkAPI.dispatch(deleteLoading(true));
       await deleteLink(data?.id);

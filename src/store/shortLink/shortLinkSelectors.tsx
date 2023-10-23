@@ -33,3 +33,8 @@ export const LogoutLoading = createSelector(
   selectState,
   (select) => select.logoutLoading
 );
+
+export const deleteUrlLoading = createSelector(
+  selectState,
+  (select) => select.logoutLoading
+);
