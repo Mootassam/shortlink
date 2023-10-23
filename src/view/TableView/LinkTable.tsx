@@ -1,13 +1,20 @@
 import { useState } from "react";
 import QRCode from "react-qr-code";
 import Date from "../../modules/shared/date";
+import { useDispatch, useSelector } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase";
+import { deleteshortUrl } from "../../store/shortLink/shortLinkActions";
 
 function LinkTable(props) {
   const { allLinks, loading, hasRows } = props;
+
   const [copySuccess, setCopySuccess] = useState(false);
   const [selected, setSelectedItem] = useState<any>();
-  const [lastAddedRowIndex, setLastAddedRowIndex] = useState(-1); // New state variable
-
+  const [user] = useAuthState(auth);
+  const dispatch: ThunkDispatch<any, void, AnyAction> = useDispatch();
   const handleCopy = (value: any, index: number) => {
     const el = document.createElement("textarea");
     el.value = value;
@@ -21,6 +28,10 @@ function LinkTable(props) {
     setTimeout(() => {
       setCopySuccess(false);
     }, 2000);
+  };
+
+  const deleteUrl = (id: number, user: any) => {
+    dispatch(deleteshortUrl({ id, user }));
   };
   return (
     <div className="app__table">
@@ -42,7 +53,7 @@ function LinkTable(props) {
         {!loading && allLinks && hasRows > 0 && (
           <tbody>
             {allLinks?.map((item: any, i: number) => (
-              <tr key={i} className={i === lastAddedRowIndex ? "newRow" : ""}>
+              <tr key={i}>
                 <td className="td__detail">
                   {item.shortlink}
                   <div
@@ -90,7 +101,10 @@ function LinkTable(props) {
                   <div className="edit">
                     <img src="/edit.png" alt="edit__" width={16} height={16} />
                   </div>
-                  <div className="delete">
+                  <div
+                    className="delete"
+                    onClick={() => deleteUrl(item.id, user)}
+                  >
                     <img
                       src="/delete.png"
                       alt="delete__"

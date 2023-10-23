@@ -5,6 +5,9 @@ import {
   query,
   addDoc,
   where,
+  doc,
+  getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { database, auth, provider } from "../../firebase";
 import Date from "../../modules/shared/date";
@@ -66,6 +69,30 @@ export const saveLink = async (original, short) => {
   }
 };
 
+export const deleteLink = async (docId) => {
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      const docRef = doc(database, "links", docId);
+
+      // Check if the document exists before attempting to delete
+      const docSnapshot = await getDoc(docRef);
+      if (docSnapshot.exists()) {
+        // Document exists, so it can be deleted
+        await deleteDoc(docRef);
+        Message.Success("Document successfully deleted!");
+      } else {
+        Message.Error("Document does not exist.");
+      }
+    } else {
+      Message.Error("User not authenticated");
+    }
+  } catch (error) {
+    Message.Error("Error deleting document");
+    console.error("Error deleting document:", error);
+    throw error;
+  }
+};
 export const saveMulti = async (original) => {
   try {
     return new Promise(async (resolve, reject) => {

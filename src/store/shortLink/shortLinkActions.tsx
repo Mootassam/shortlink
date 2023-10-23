@@ -6,6 +6,7 @@ import {
   setLink,
   multiLoading,
   logoutLoading,
+  deleteLoading,
 } from "./shortLinkReducers";
 import {
   generateShortLinks,
@@ -14,6 +15,7 @@ import {
   saveMulti,
   loginService,
   logoutService,
+  deleteLink,
 } from "./shortLinkService";
 import Message from "../../modules/shared/Message";
 
@@ -82,6 +84,22 @@ export const LoginIn = createAsyncThunk<void, any>(
     } catch (error) {
       thunkAPI.dispatch(loginLoading(false));
       console.log("Error generating numbers", error);
+    }
+  }
+);
+
+export const deleteshortUrl = createAsyncThunk<void, any>(
+  "url/delete",
+  async (data, thunkAPI) => {
+    console.log("data data", data);
+
+    try {
+      thunkAPI.dispatch(deleteLoading(true));
+      await deleteLink(data?.id);
+      thunkAPI.dispatch(showLinks(data?.user.uid));
+      thunkAPI.dispatch(deleteLoading(false));
+    } catch (error) {
+      thunkAPI.dispatch(deleteLoading(false));
     }
   }
 );
