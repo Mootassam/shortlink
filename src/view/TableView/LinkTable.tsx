@@ -103,9 +103,9 @@ function LinkTable(props) {
                 </td>
                 <td>{Date.format(item.date)}</td>
                 <td className="actions__">
-                  <div className="edit">
+                  {/* <div className="edit">
                     <img src="/edit.png" alt="edit__" width={16} height={16} />
-                  </div>
+                  </div> */}
                   <div
                     className="delete"
                     onClick={() => deleteUrl(item.id, user)}
