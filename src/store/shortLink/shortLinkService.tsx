@@ -127,10 +127,11 @@ export const logoutService = async () => {
     console.log(error);
   }
 };
-export const UpdateUrl = async (docId, updatedData) => {
-  const docRef = doc(database, "multiLinks", docId);
-  console.log(updatedData, "ID DOCUMENT");
+export const shortUrlUpdate = async (docId, updatedData) => {
+  console.log(docId);
+
   try {
+    const docRef = doc(database, "multiLinks", docId);
     await updateDoc(docRef, { links: updatedData });
     Message.Success("Document updated successfully");
   } catch (error) {
@@ -139,23 +140,22 @@ export const UpdateUrl = async (docId, updatedData) => {
   }
 };
 
-export const getDocumentDetails = async (docId) => {
-  try {
-    const docRef = doc(database, "multiLinks", docId);
-    const docSnapshot = await getDoc(docRef);
+export const getDocumentDetails = (docId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const docRef = doc(database, "multiLinks", docId);
+      const docSnapshot = await getDoc(docRef);
 
-    if (docSnapshot.exists()) {
-      // Document exists, you can access its data
-      const data = docSnapshot.data();
-
-      console.log(data);
-
-      return data;
-    } else {
-      return null; // Document does not exist
+      if (docSnapshot.exists()) {
+        // Document exists, you can access its data
+        const data = docSnapshot.data();
+        resolve(data);
+      } else {
+        resolve(null); // Document does not exist
+      }
+    } catch (error) {
+      console.error("Error getting document:", error);
+      reject(error);
     }
-  } catch (error) {
-    console.error("Error getting document:", error);
-    throw error;
-  }
+  });
 };

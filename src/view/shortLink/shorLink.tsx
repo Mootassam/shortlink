@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./shorLink.css";
 import "firebase/compat/auth";
 import "firebase/compat/database";
@@ -8,14 +8,16 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   LoginIn,
   Logout,
+  UrlUpdate,
   generateShortLink,
+  generateShortMulti,
   showDetail,
   showLinks,
-  updateUrl,
 } from "../../store/shortLink/shortLinkActions";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import {
+  LoadingUpdate,
   fetchLoading,
   hasRows,
   listLinks,
@@ -28,7 +30,6 @@ import LinkTable from "../TableView/LinkTable";
 import { Toaster } from "react-hot-toast";
 import { onAuthStateChanged } from "@firebase/auth";
 import Message from "../../modules/shared/Message";
-import ModalUrl from "../Sidebar/ModalUrl";
 
 function ShortLink() {
   const [user] = useAuthState(auth);
@@ -43,44 +44,30 @@ function ShortLink() {
   const LoadingLogin = useSelector(loginLoading);
   const detaillurl = useSelector(sepecifDetail);
   const [update, setUpdate] = useState(false);
-  const [idDoc, setDoc] = useState();
+  const loadingUpdate = useSelector(LoadingUpdate);
+  const [id, setId] = useState();
   const [form, setNewform] = useState<{ link: string }[]>([
     {
       link: "",
     },
   ]);
 
-  const editUlr = async (item: any) => {
-    try {
-      if (item) {
-        setDoc(item);
-        await dispatch(showDetail(item));
-        setNewform(detaillurl.links);
-      }
-      if (item && detaillurl && detaillurl?.links) {
-        setShow(true);
-        setUpdate(true);
-      }
-    } catch (error) {
-      console.log(error);
+  const editUlr = (item: any) => {
+    if (item) {
+      setShow(true);
+      setUpdate(true);
+      dispatch(showDetail(item));
+      setNewform(detaillurl.links);
+      setId(item);
+
+      // dispatch(updateUrl({ item, form, user }));
+    } else {
     }
   };
 
-  const UpdateDocument = () => {
-    dispatch(updateUrl({ idDoc, form, user }));
+  const updateUrl = () => {
+    dispatch(UrlUpdate({ id, form }));
   };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // If a user is logged in, call showLinks with their UID
-        dispatch(showLinks(user.uid));
-      }
-    });
-
-    // Clean up the listener when the component unmounts
-    return () => unsubscribe();
-  }, [dispatch, idDoc]);
 
   const showLink = () => {
     setShow(true);
@@ -142,6 +129,80 @@ function ShortLink() {
     }
   };
 
+  const SaveMultiLinks = async () => {
+    // Check if any of the form fields are empty
+    function isValidURL(input) {
+      const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+      return urlPattern.test(input);
+    }
+    function validateAndTrimURL(url) {
+      const trimmedUrl = url.trim();
+      if (!isValidURL(trimmedUrl)) {
+        throw new Error("Invalid URL");
+      }
+      return trimmedUrl;
+    }
+    const isAnyEmpty = form.some((item) => item.link.trim() === "");
+
+    if (isAnyEmpty) {
+      Message.Error("Please fill in all form fields before saving.");
+    } else {
+      // Check if all URLs in the form are valid
+      const areAllURLsValid = form.every((item) => {
+        try {
+          validateAndTrimURL(item.link);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      });
+
+      if (areAllURLsValid) {
+        if (user) {
+          dispatch(generateShortMulti({ form, user }));
+        } else {
+          Message.Error("Auth required");
+        }
+      } else {
+        Message.Error("Please enter valid URLs in all form fields.");
+      }
+    }
+  };
+
+  const addFields = () => {
+    setNewform([
+      ...form,
+      {
+        link: "",
+      },
+    ]);
+  };
+  const removeFields = (index: number) => {
+    let formDelete = [...form];
+    formDelete.splice(index, 1);
+    setNewform(formDelete);
+  };
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    i: number
+  ) => {
+    let formN = [...form];
+    formN[i] = { ...formN[i], [event.target.name]: event.target.value };
+    setNewform(formN);
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // If a user is logged in, call showLinks with their UID
+        dispatch(showLinks(user.uid));
+      }
+    });
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+  }, [dispatch, ]);
   return (
     <div className="app">
       <div className="app__header">
@@ -241,15 +302,75 @@ function ShortLink() {
       />
 
       {show && (
-        <ModalUrl
-          loadingMulti={loadingMulti}
-          setShow={setShow}
-          setNewform={setNewform}
-          form={form}
-          update={update}
-          updateUrl={UpdateDocument}
-          detaillurl={detaillurl}
-        />
+        <div className="app__sidebar">
+          <div className="content__plus">
+            <div className="plus__link" onClick={addFields}>
+              <i className="fa-solid fa-plus"></i>
+            </div>
+          </div>
+          <div className="sidebar__content">
+            {form &&
+              form?.map((item, index) => (
+                <div className="content__" key={index}>
+                  <div className="circle">{index + 1}</div>
+                  <div className="more__links">
+                    <div>
+                      <img src="/link.png" alt="" />
+                    </div>
+                    <input
+                      type="text"
+                      className="more__link"
+                      name="link"
+                      value={item.link}
+                      placeholder="Enter the link here"
+                      onChange={(e) => {
+                        handleChange(e, index);
+                      }}
+                    />
+                  </div>
+                  {index ? (
+                    <div className="cancel" onClick={() => removeFields(index)}>
+                      <i className="fa-solid fa-minus"></i>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              ))}
+          </div>
+
+          <div className="sidebar__bottom">
+            <div className="sidebar__save">
+              <div className="cancel__now" onClick={() => setShow(false)}>
+                Cancel Now!
+              </div>
+
+              {update && (
+                <div className="update__now" onClick={updateUrl}>
+                  {!loadingUpdate && <>Update Now!</>}
+                  {loadingUpdate && (
+                    <div className="shorten">
+                      Shorten ... <div className="spinners"></div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {!update && (
+                <>
+                  <div className="save__now" onClick={SaveMultiLinks}>
+                    {!loadingMulti && <>Save Now!</>}
+                    {loadingMulti && (
+                      <div className="shorten">
+                        Shorten ... <div className="spinners"></div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
       )}
 
       <div className="app__footer"></div>

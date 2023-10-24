@@ -19,8 +19,8 @@ import {
   loginService,
   logoutService,
   deleteLink,
-  UpdateUrl,
   getDocumentDetails,
+  shortUrlUpdate,
 } from "./shortLinkService";
 import Message from "../../modules/shared/Message";
 
@@ -121,15 +121,14 @@ export const Logout = createAsyncThunk<void, any>(
   }
 );
 
-export const updateUrl = createAsyncThunk<void, any>(
-  "short/genearate",
+export const UrlUpdate = createAsyncThunk<void, any>(
+  "url/update",
   async (data, thunkAPI) => {
-    console.log(data.user.uid, "??????");
     try {
       thunkAPI.dispatch(getUpdateLoading(true));
-      await UpdateUrl(data.idDoc, data.form);
-      thunkAPI.dispatch(showLinks(data?.user.uid));
+      await shortUrlUpdate(data.id, data.form);
       thunkAPI.dispatch(getUpdateLoading(false));
+      thunkAPI.dispatch(showLinks(data?.user.uid));
     } catch (error) {
       thunkAPI.dispatch(getUpdateLoading(false));
     }
@@ -142,7 +141,7 @@ export const showDetail = createAsyncThunk<void, any>(
     try {
       thunkAPI.dispatch(geteditLoading(true));
       const item = await getDocumentDetails(data);
-      thunkAPI.dispatch(setDetailUrl(item));
+      await thunkAPI.dispatch(setDetailUrl(item));
       thunkAPI.dispatch(geteditLoading(false));
     } catch (error) {
       thunkAPI.dispatch(geteditLoading(false));
