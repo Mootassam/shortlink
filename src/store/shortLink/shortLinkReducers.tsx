@@ -10,6 +10,7 @@ const generateSlice = createSlice({
     logoutLoading: false,
     loadingremove: false,
     updateLoading: false,
+    editLoading: false,
     links: [],
     linksDetail: [],
   },
@@ -46,6 +47,10 @@ const generateSlice = createSlice({
     setDetailUrl: (state, actions) => {
       state.linksDetail = actions.payload;
     },
+
+    geteditLoading: (state, actions) => {
+      state.editLoading = actions.payload;
+    },
   },
 });
 
@@ -59,6 +64,7 @@ export const {
   deleteLoading,
   getUpdateLoading,
   setDetailUrl,
+  geteditLoading,
 } = generateSlice.actions;
 
 export default generateSlice.reducer;

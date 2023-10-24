@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Message from "../../modules/shared/Message";
 import { generateShortMulti } from "../../store/shortLink/shortLinkActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,6 +54,7 @@ function ModalUrl(props: any) {
       }
     }
   };
+  useEffect(() => {}, [form]);
 
   const addFields = () => {
     setNewform([
@@ -85,33 +86,34 @@ function ModalUrl(props: any) {
         </div>
       </div>
       <div className="sidebar__content">
-        {form?.map((item, index) => (
-          <div className="content__" key={index}>
-            <div className="circle">{index + 1}</div>
-            <div className="more__links">
-              <div>
-                <img src="/link.png" alt="" />
+        {form &&
+          form?.map((item, index) => (
+            <div className="content__" key={index}>
+              <div className="circle">{index + 1}</div>
+              <div className="more__links">
+                <div>
+                  <img src="/link.png" alt="" />
+                </div>
+                <input
+                  type="text"
+                  className="more__link"
+                  name="link"
+                  value={item.link}
+                  placeholder="Enter the link here"
+                  onChange={(e) => {
+                    handleChange(e, index);
+                  }}
+                />
               </div>
-              <input
-                type="text"
-                className="more__link"
-                name="link"
-                value={item.link}
-                placeholder="Enter the link here"
-                onChange={(e) => {
-                  handleChange(e, index);
-                }}
-              />
+              {index ? (
+                <div className="cancel" onClick={() => removeFields(index)}>
+                  <i className="fa-solid fa-minus"></i>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
-            {index ? (
-              <div className="cancel" onClick={() => removeFields(index)}>
-                <i className="fa-solid fa-minus"></i>
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-        ))}
+          ))}
       </div>
 
       <div className="sidebar__bottom">

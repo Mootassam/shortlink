@@ -9,6 +9,7 @@ import {
   deleteLoading,
   getUpdateLoading,
   setDetailUrl,
+  geteditLoading,
 } from "./shortLinkReducers";
 import {
   generateShortLinks,
@@ -139,12 +140,13 @@ export const showDetail = createAsyncThunk<void, any>(
   "url/detail",
   async (data, thunkAPI) => {
     try {
-      // thunkAPI.dispatch()
+      thunkAPI.dispatch(geteditLoading(true));
       const item = await getDocumentDetails(data);
       thunkAPI.dispatch(setDetailUrl(item));
-      // thunkAPI.dispatch()
+      thunkAPI.dispatch(geteditLoading(false));
     } catch (error) {
-      // thunkAPI.dispatch()
+      thunkAPI.dispatch(geteditLoading(false));
+      throw error;
     }
   }
 );

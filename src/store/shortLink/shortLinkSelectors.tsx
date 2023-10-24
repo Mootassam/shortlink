@@ -36,7 +36,7 @@ export const LogoutLoading = createSelector(
 
 export const deleteUrlLoading = createSelector(
   selectState,
-  (select) => select.logoutLoading
+  (select) => select.loadingremove
 );
 
 export const editUrl = createSelector(
@@ -52,4 +52,9 @@ export const sepecifDetail = createSelector(
 export const LoadingUpdate = createSelector(
   selectState,
   (state) => state.updateLoading
+);
+
+export const editLoading = createSelector(
+  selectState,
+  (state) => state.editLoading
 );

@@ -10,7 +10,10 @@ import {
   deleteshortUrl,
   updateUrl,
 } from "../../store/shortLink/shortLinkActions";
-import { deleteUrlLoading } from "../../store/shortLink/shortLinkSelectors";
+import {
+  deleteUrlLoading,
+  editLoading,
+} from "../../store/shortLink/shortLinkSelectors";
 
 function LinkTable(props) {
   const { allLinks, loading, hasRows } = props;
@@ -18,6 +21,8 @@ function LinkTable(props) {
   const [copySuccess, setCopySuccess] = useState(false);
   const [selected, setSelectedItem] = useState<any>();
   const deleteLoadings = useSelector(deleteUrlLoading);
+
+  const loadingedit = useSelector(editLoading);
 
   const [user] = useAuthState(auth);
   const dispatch: ThunkDispatch<any, void, AnyAction> = useDispatch();
@@ -109,7 +114,16 @@ function LinkTable(props) {
                 <td>{Date.format(item.date)}</td>
                 <td className="actions__">
                   <div className="edit" onClick={() => editUlr(item.multiId)}>
-                    <img src="/edit.png" alt="edit__" width={16} height={16} />
+                    {loadingedit && <div className="spinnerdelete"></div>}
+
+                    {!loadingedit && (
+                      <img
+                        src="/edit.png"
+                        alt="edit__"
+                        width={16}
+                        height={16}
+                      />
+                    )}
                   </div>
                   <div
                     className="delete"
