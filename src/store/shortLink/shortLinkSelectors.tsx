@@ -48,3 +48,8 @@ export const sepecifDetail = createSelector(
   selectState,
   (state) => state.linksDetail
 );
+
+export const LoadingUpdate = createSelector(
+  selectState,
+  (state) => state.updateLoading
+);

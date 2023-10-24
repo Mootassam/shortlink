@@ -128,9 +128,10 @@ export const logoutService = async () => {
   }
 };
 export const UpdateUrl = async (docId, updatedData) => {
+  const docRef = doc(database, "multiLinks", docId);
+  console.log(updatedData, "ID DOCUMENT");
   try {
-    const docRef = doc(database, "multiLinks", docId);
-    await updateDoc(docRef, updatedData);
+    await updateDoc(docRef, { links: updatedData });
     Message.Success("Document updated successfully");
   } catch (error) {
     Message.Error("Error updating document:");

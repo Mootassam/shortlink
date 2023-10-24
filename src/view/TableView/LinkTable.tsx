@@ -49,7 +49,7 @@ function LinkTable(props) {
         <thead>
           <tr className="tr__">
             <td>Short Link</td>
-            <td>Original Link</td>
+            {/* <td>Original Link</td> */}
             <td>QR Code</td>
             <td>Clicks</td>
             <td>Status</td>
@@ -75,7 +75,7 @@ function LinkTable(props) {
                     <img src="/copy.png" alt="" />
                   </div>
                 </td>
-                <td className="original__link">{item.originallink}</td>
+                {/* <td className="original__link">{item.originallink}</td> */}
                 <td>
                   <div
                     style={{

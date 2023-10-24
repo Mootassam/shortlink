@@ -123,9 +123,10 @@ export const Logout = createAsyncThunk<void, any>(
 export const updateUrl = createAsyncThunk<void, any>(
   "short/genearate",
   async (data, thunkAPI) => {
+    console.log(data.user.uid, "??????");
     try {
       thunkAPI.dispatch(getUpdateLoading(true));
-      await UpdateUrl(data.id, data.form);
+      await UpdateUrl(data.idDoc, data.form);
       thunkAPI.dispatch(showLinks(data?.user.uid));
       thunkAPI.dispatch(getUpdateLoading(false));
     } catch (error) {

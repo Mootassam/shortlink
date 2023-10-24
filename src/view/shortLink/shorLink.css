@@ -676,6 +676,25 @@ tr {
   align-items: center;
   cursor: pointer;
 }
+.update__now {
+  color: #fff;
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 18px; /* 112.5% */
+  border-radius: 48px;
+  border: 1px solid #e38914;
+  background: #e38914;
+  box-shadow: 10px 9px 22px 0px rgba(218, 189, 46, 0.38);
+  display: flex;
+  width: 150px;
+  padding: 15px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
 
 .nodatadisplay {
   color: white;

@@ -43,6 +43,8 @@ function ShortLink() {
   const loadingMulti = useSelector(multiLoading);
   const LoadingLogin = useSelector(loginLoading);
   const detaillurl = useSelector(sepecifDetail);
+  const [update, setUpdate] = useState(false);
+  const [idDoc, setDoc] = useState();
   const [form, setNewform] = useState<{ link: string }[]>([
     {
       link: "",
@@ -51,12 +53,19 @@ function ShortLink() {
 
   const editUlr = (item: any) => {
     if (item) {
+      setShow(true);
+      setUpdate(true);
       dispatch(showDetail(item));
       setNewform(detaillurl.links);
+      setDoc(item);
 
       // dispatch(updateUrl({ item, form, user }));
-      setShow(true);
+    } else {
     }
+  };
+
+  const UpdateDocument = () => {
+    dispatch(updateUrl({ idDoc, form, user }));
   };
 
   useEffect(() => {
@@ -69,10 +78,12 @@ function ShortLink() {
 
     // Clean up the listener when the component unmounts
     return () => unsubscribe();
-  }, [dispatch]);
+  }, [dispatch, idDoc]);
 
   const showLink = () => {
     setShow(true);
+    setNewform([{ link: "" }]);
+    setUpdate(false);
   };
 
   const getFirstName = (fullName: any) => {
@@ -233,6 +244,9 @@ function ShortLink() {
           setShow={setShow}
           setNewform={setNewform}
           form={form}
+          update={update}
+          updateUrl={UpdateDocument}
+          detaillurl={detaillurl}
         />
       )}
 

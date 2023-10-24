@@ -6,11 +6,14 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
+import { LoadingUpdate } from "../../store/shortLink/shortLinkSelectors";
 function ModalUrl(props: any) {
-  const { loadingMulti, setNewform, form } = props;
+  const { loadingMulti, setNewform, form, update, updateUrl, detaillurl } =
+    props;
   const dispatch: ThunkDispatch<any, void, AnyAction> = useDispatch();
   const [user] = useAuthState(auth);
 
+  const loadingUpdate = useSelector(LoadingUpdate);
   const SaveMultiLinks = async () => {
     // Check if any of the form fields are empty
     function isValidURL(input) {
@@ -82,7 +85,7 @@ function ModalUrl(props: any) {
         </div>
       </div>
       <div className="sidebar__content">
-        {form.map((item, index) => (
+        {form?.map((item, index) => (
           <div className="content__" key={index}>
             <div className="circle">{index + 1}</div>
             <div className="more__links">
@@ -116,14 +119,30 @@ function ModalUrl(props: any) {
           <div className="cancel__now" onClick={() => props.setShow(false)}>
             Cancel Now!
           </div>
-          <div className="save__now" onClick={SaveMultiLinks}>
-            {!loadingMulti && <>Save Now!</>}
-            {loadingMulti && (
-              <div className="shorten">
-                Shorten ... <div className="spinners"></div>
+
+          {update && (
+            <div className="update__now" onClick={updateUrl}>
+              {!loadingUpdate && <>Update Now!</>}
+              {loadingUpdate && (
+                <div className="shorten">
+                  Shorten ... <div className="spinners"></div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!update && (
+            <>
+              <div className="save__now" onClick={SaveMultiLinks}>
+                {!loadingMulti && <>Save Now!</>}
+                {loadingMulti && (
+                  <div className="shorten">
+                    Shorten ... <div className="spinners"></div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>
