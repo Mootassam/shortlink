@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Message from "../../modules/shared/Message";
 import { generateShortMulti } from "../../store/shortLink/shortLinkActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import { LoadingUpdate } from "../../store/shortLink/shortLinkSelectors";
 function ModalUrl(props: any) {
-  const { loadingMulti, setNewform, form, update, updateUrl, detaillurl } =
-    props;
+  const { loadingMulti, setNewform, form, update, updateUrl } = props;
   const dispatch: ThunkDispatch<any, void, AnyAction> = useDispatch();
   const [user] = useAuthState(auth);
 
@@ -20,7 +19,6 @@ function ModalUrl(props: any) {
       const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
       return urlPattern.test(input);
     }
-
     function validateAndTrimURL(url) {
       const trimmedUrl = url.trim();
       if (!isValidURL(trimmedUrl)) {

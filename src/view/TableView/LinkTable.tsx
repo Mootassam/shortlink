@@ -6,10 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
-import {
-  deleteshortUrl,
-  updateUrl,
-} from "../../store/shortLink/shortLinkActions";
+import { deleteshortUrl } from "../../store/shortLink/shortLinkActions";
 import {
   deleteUrlLoading,
   editLoading,

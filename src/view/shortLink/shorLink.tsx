@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./shorLink.css";
 import "firebase/compat/auth";
 import "firebase/compat/database";
@@ -9,7 +9,6 @@ import {
   LoginIn,
   Logout,
   generateShortLink,
-  generateShortMulti,
   showDetail,
   showLinks,
   updateUrl,
@@ -51,16 +50,19 @@ function ShortLink() {
     },
   ]);
 
-  const editUlr = (item: any) => {
-    if (item) {
-      setShow(true);
-      setUpdate(true);
-      dispatch(showDetail(item));
-      setNewform(detaillurl.links);
-      setDoc(item);
-
-      // dispatch(updateUrl({ item, form, user }));
-    } else {
+  const editUlr = async (item: any) => {
+    try {
+      if (item) {
+        setDoc(item);
+        await dispatch(showDetail(item));
+        setNewform(detaillurl.links);
+      }
+      if (item && detaillurl && detaillurl?.links) {
+        setShow(true);
+        setUpdate(true);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
