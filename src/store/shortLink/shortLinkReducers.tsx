@@ -45,7 +45,7 @@ const generateSlice = createSlice({
     },
 
     setDetailUrl: (state, actions) => {
-      state.linksDetail = actions.payload;
+      state.linksDetail = actions.payload.links;
     },
 
     geteditLoading: (state, actions) => {

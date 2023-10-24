@@ -14,14 +14,12 @@ import {
 
 function LinkTable(props) {
   const { allLinks, loading, hasRows } = props;
-
   const [copySuccess, setCopySuccess] = useState(false);
   const [selected, setSelectedItem] = useState<any>();
   const deleteLoadings = useSelector(deleteUrlLoading);
-
   const loadingedit = useSelector(editLoading);
-
   const [user] = useAuthState(auth);
+  const [currentIndex, setCurrentIndex] = useState();
   const dispatch: ThunkDispatch<any, void, AnyAction> = useDispatch();
   const handleCopy = (value: any, index: number) => {
     const el = document.createElement("textarea");
@@ -42,9 +40,11 @@ function LinkTable(props) {
     dispatch(deleteshortUrl({ id, user }));
   };
 
-  const editUlr = (id) => {
+  const edit = (id, index) => {
+    setCurrentIndex(index);
     props.editUlr(id);
   };
+
   return (
     <div className="app__table">
       <table>
@@ -110,10 +110,13 @@ function LinkTable(props) {
                 </td>
                 <td>{Date.format(item.date)}</td>
                 <td className="actions__">
-                  <div className="edit" onClick={() => editUlr(item.multiId)}>
-                    {loadingedit && <div className="spinnerdelete"></div>}
+                  {item.multiId}
+                  <div className="edit" onClick={() => edit(item.multiId, i)}>
+                    {loadingedit && currentIndex === i && (
+                      <div className="spinnerdelete"></div>
+                    )}
 
-                    {!loadingedit && (
+                    {currentIndex !== i && (
                       <img
                         src="/edit.png"
                         alt="edit__"

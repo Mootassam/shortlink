@@ -141,7 +141,10 @@ export const showDetail = createAsyncThunk<void, any>(
     try {
       thunkAPI.dispatch(geteditLoading(true));
       const item = await getDocumentDetails(data);
-      await thunkAPI.dispatch(setDetailUrl(item));
+      console.log(item);
+      if (item) {
+        await thunkAPI.dispatch(setDetailUrl(item));
+      }
       thunkAPI.dispatch(geteditLoading(false));
     } catch (error) {
       thunkAPI.dispatch(geteditLoading(false));

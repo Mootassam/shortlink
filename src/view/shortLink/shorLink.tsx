@@ -42,29 +42,48 @@ function ShortLink() {
   const shortLoadign = useSelector(shortLoading);
   const loadingMulti = useSelector(multiLoading);
   const LoadingLogin = useSelector(loginLoading);
-  const detaillurl = useSelector(sepecifDetail);
   const [update, setUpdate] = useState(false);
   const loadingUpdate = useSelector(LoadingUpdate);
   const [id, setId] = useState();
+  const detaillurl = useSelector(sepecifDetail);
+
+  console.log(detaillurl, "FANTA ");
+
   const [form, setNewform] = useState<{ link: string }[]>([
     {
       link: "",
     },
   ]);
+  const editUlr = async (item: any) => {
+    console.log("item id ", item);
 
-  const editUlr = (item: any) => {
-    if (item) {
-      setShow(true);
-      setUpdate(true);
-      dispatch(showDetail(item));
-      setNewform(detaillurl.links);
-      setId(item);
+    try {
+      if (item) {
+        await dispatch(showDetail(item));
+      }
 
-      // dispatch(updateUrl({ item, form, user }));
-    } else {
+      console.log("item detaills", detaillurl); // This will now have the updated value
+
+      if (item && detaillurl.length > 0) {
+        setShow(true);
+        setUpdate(true);
+        setId(item);
+      }
+    } catch (error) {
+      // Handle errors
     }
   };
 
+  useEffect(() => {
+    console.log("item detaills (from useEffect)", detaillurl);
+    // Check detaillurl and other logic when it changes
+    if (id && detaillurl.length > 0) {
+      setShow(true);
+      setUpdate(true);
+      setNewform(detaillurl);
+      // You can also perform additional operations here
+    }
+  }, [detaillurl]);
   const updateUrl = () => {
     dispatch(UrlUpdate({ id, form }));
   };
@@ -202,7 +221,7 @@ function ShortLink() {
 
     // Clean up the listener when the component unmounts
     return () => unsubscribe();
-  }, [dispatch, ]);
+  }, [dispatch]);
   return (
     <div className="app">
       <div className="app__header">
