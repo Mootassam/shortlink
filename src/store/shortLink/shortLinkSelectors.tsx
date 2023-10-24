@@ -38,3 +38,13 @@ export const deleteUrlLoading = createSelector(
   selectState,
   (select) => select.logoutLoading
 );
+
+export const editUrl = createSelector(
+  selectState,
+  (state) => state.updateLoading
+);
+
+export const sepecifDetail = createSelector(
+  selectState,
+  (state) => state.linksDetail
+);

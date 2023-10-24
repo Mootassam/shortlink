@@ -8,6 +8,7 @@ import {
   doc,
   getDoc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { database, auth, provider } from "../../firebase";
 import Date from "../../modules/shared/date";
@@ -48,7 +49,7 @@ export const generateShortLinks = async (url: any) => {
   }
 };
 
-export const saveLink = async (original, short) => {
+export const saveLink = async (original, short, idDoc) => {
   try {
     const user = auth.currentUser;
     if (user) {
@@ -58,6 +59,7 @@ export const saveLink = async (original, short) => {
         shortlink: short,
         status: "active",
         userId: user.uid,
+        multiId: idDoc,
       });
     } else {
       Message.Error("User not authenticated");
@@ -123,5 +125,36 @@ export const logoutService = async () => {
     auth.signOut();
   } catch (error) {
     console.log(error);
+  }
+};
+export const UpdateUrl = async (docId, updatedData) => {
+  try {
+    const docRef = doc(database, "multiLinks", docId);
+    await updateDoc(docRef, updatedData);
+    Message.Success("Document updated successfully");
+  } catch (error) {
+    Message.Error("Error updating document:");
+    throw error;
+  }
+};
+
+export const getDocumentDetails = async (docId) => {
+  try {
+    const docRef = doc(database, "multiLinks", docId);
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot.exists()) {
+      // Document exists, you can access its data
+      const data = docSnapshot.data();
+
+      console.log(data);
+
+      return data;
+    } else {
+      return null; // Document does not exist
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    throw error;
   }
 };

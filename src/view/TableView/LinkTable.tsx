@@ -6,7 +6,10 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
-import { deleteshortUrl } from "../../store/shortLink/shortLinkActions";
+import {
+  deleteshortUrl,
+  updateUrl,
+} from "../../store/shortLink/shortLinkActions";
 import { deleteUrlLoading } from "../../store/shortLink/shortLinkSelectors";
 
 function LinkTable(props) {
@@ -15,8 +18,6 @@ function LinkTable(props) {
   const [copySuccess, setCopySuccess] = useState(false);
   const [selected, setSelectedItem] = useState<any>();
   const deleteLoadings = useSelector(deleteUrlLoading);
-
-  console.log("remove data", deleteLoadings);
 
   const [user] = useAuthState(auth);
   const dispatch: ThunkDispatch<any, void, AnyAction> = useDispatch();
@@ -37,6 +38,10 @@ function LinkTable(props) {
 
   const deleteUrl = (id: number, user: any) => {
     dispatch(deleteshortUrl({ id, user }));
+  };
+
+  const editUlr = (id) => {
+    props.editUlr(id);
   };
   return (
     <div className="app__table">
@@ -103,9 +108,9 @@ function LinkTable(props) {
                 </td>
                 <td>{Date.format(item.date)}</td>
                 <td className="actions__">
-                  {/* <div className="edit">
+                  <div className="edit" onClick={() => editUlr(item.multiId)}>
                     <img src="/edit.png" alt="edit__" width={16} height={16} />
-                  </div> */}
+                  </div>
                   <div
                     className="delete"
                     onClick={() => deleteUrl(item.id, user)}

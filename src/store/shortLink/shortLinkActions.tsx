@@ -7,6 +7,8 @@ import {
   multiLoading,
   logoutLoading,
   deleteLoading,
+  getUpdateLoading,
+  setDetailUrl,
 } from "./shortLinkReducers";
 import {
   generateShortLinks,
@@ -16,6 +18,8 @@ import {
   loginService,
   logoutService,
   deleteLink,
+  UpdateUrl,
+  getDocumentDetails,
 } from "./shortLinkService";
 import Message from "../../modules/shared/Message";
 
@@ -39,7 +43,7 @@ export const generateShortLink = createAsyncThunk<void, any>(
     try {
       thunkAPI.dispatch(shortLoading(true));
       const newUrl = await generateShortLinks(url?.url);
-      await saveLink(url?.url, newUrl);
+      await saveLink(url?.url, newUrl, "");
       thunkAPI.dispatch(shortLoading(false));
       console.log();
 
@@ -61,7 +65,7 @@ export const generateShortMulti = createAsyncThunk<void, any>(
       const idDoc = await saveMulti(form.form);
       const url = window.location.href + "detail/" + idDoc;
       const newUrl = await generateShortLinks(url);
-      await saveLink(url, newUrl);
+      await saveLink(url, newUrl, idDoc);
       thunkAPI.dispatch(multiLoading(false));
       thunkAPI.dispatch(showLinks(form?.user.uid));
       Message.Success("Successfully");
@@ -112,6 +116,34 @@ export const Logout = createAsyncThunk<void, any>(
     } catch (error) {
       thunkAPI.dispatch(logoutLoading(false));
       console.log("Error generating numbers", error);
+    }
+  }
+);
+
+export const updateUrl = createAsyncThunk<void, any>(
+  "short/genearate",
+  async (data, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(getUpdateLoading(true));
+      await UpdateUrl(data.id, data.form);
+      thunkAPI.dispatch(showLinks(data?.user.uid));
+      thunkAPI.dispatch(getUpdateLoading(false));
+    } catch (error) {
+      thunkAPI.dispatch(getUpdateLoading(false));
+    }
+  }
+);
+
+export const showDetail = createAsyncThunk<void, any>(
+  "url/detail",
+  async (data, thunkAPI) => {
+    try {
+      // thunkAPI.dispatch()
+      const item = await getDocumentDetails(data);
+      thunkAPI.dispatch(setDetailUrl(item));
+      // thunkAPI.dispatch()
+    } catch (error) {
+      // thunkAPI.dispatch()
     }
   }
 );

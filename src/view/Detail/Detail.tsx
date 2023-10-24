@@ -4,8 +4,7 @@ import { database } from "../../firebase";
 import { useParams } from "react-router-dom";
 
 function Detail() {
-    const { parameter } = useParams();
-
+  const { parameter } = useParams();
   const [links, setLinks] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
