@@ -47,7 +47,6 @@ function ShortLink() {
   const [id, setId] = useState();
   const detaillurl = useSelector(sepecifDetail);
 
-
   const [form, setNewform] = useState<{ link: string }[]>([
     {
       link: "",
@@ -311,7 +310,6 @@ function ShortLink() {
         loading={loadingLinks}
         hasRows={coutRows}
         editUlr={editUlr}
-        user={user}
       />
 
       {show && (

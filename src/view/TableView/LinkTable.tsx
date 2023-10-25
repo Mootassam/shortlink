@@ -20,6 +20,8 @@ function LinkTable(props) {
   const loadingedit = useSelector(editLoading);
   const [user] = useAuthState(auth);
   const [currentIndex, setCurrentIndex] = useState();
+
+  const [deleteIndex, setDeleteIndex] = useState();
   const dispatch: ThunkDispatch<any, void, AnyAction> = useDispatch();
   const handleCopy = (value: any, index: number) => {
     const el = document.createElement("textarea");
@@ -36,8 +38,9 @@ function LinkTable(props) {
     }, 2000);
   };
 
-  const deleteUrl = (id: number, user: any, idmulti: any) => {
+  const deleteUrl = (id: number, user: any, idmulti: any, i) => {
     dispatch(deleteshortUrl({ id, user, idmulti }));
+    setDeleteIndex(i);
   };
   const edit = (id, index) => {
     setCurrentIndex(index);
@@ -109,11 +112,9 @@ function LinkTable(props) {
                 <td>{Date.format(item.date)}</td>
                 <td className="actions__">
                   <div className="edit" onClick={() => edit(item.multiId, i)}>
-                    {loadingedit && currentIndex === i && (
+                    {loadingedit && currentIndex === i ? (
                       <div className="spinnerdelete"></div>
-                    )}
-
-                    {currentIndex !== i && (
+                    ) : (
                       <img
                         src="/edit.png"
                         alt="edit__"
@@ -124,9 +125,9 @@ function LinkTable(props) {
                   </div>
                   <div
                     className="delete"
-                    onClick={() => deleteUrl(item.id, user, item.multiId)}
+                    onClick={() => deleteUrl(item.id, user, item.multiId, i)}
                   >
-                    {deleteLoadings === true ? (
+                    {deleteLoadings === true && deleteIndex == i ? (
                       <div className="spinnerdelete"></div>
                     ) : (
                       <img
