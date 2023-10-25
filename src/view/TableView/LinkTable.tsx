@@ -12,14 +12,13 @@ import {
   editLoading,
 } from "../../store/shortLink/shortLinkSelectors";
 
-function LinkTable(props) {
-  const { allLinks, loading, hasRows } = props;
+function LinkTable({ allLinks, loading, hasRows, editUlr }) {
   const [copySuccess, setCopySuccess] = useState(false);
   const [selected, setSelectedItem] = useState<any>();
   const deleteLoadings = useSelector(deleteUrlLoading);
   const loadingedit = useSelector(editLoading);
   const [user] = useAuthState(auth);
-  const [currentIndex, setCurrentIndex] = useState();
+  const [currentIndex, setCurrentIndex] = useState<number>();
 
   const [deleteIndex, setDeleteIndex] = useState();
   const dispatch: ThunkDispatch<any, void, AnyAction> = useDispatch();
@@ -42,9 +41,9 @@ function LinkTable(props) {
     dispatch(deleteshortUrl({ id, user, idmulti }));
     setDeleteIndex(i);
   };
-  const edit = (id, index) => {
+  const edit = (id: any, index: number) => {
+    editUlr(id);
     setCurrentIndex(index);
-    props.editUlr(id);
   };
   return (
     <div className="app__table">

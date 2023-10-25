@@ -62,6 +62,7 @@ function ShortLink() {
         setShow(true);
         setUpdate(true);
         setId(item);
+        setNewform(detaillurl);
       }
     } catch (error) {
       // Handle errors
@@ -306,10 +307,10 @@ function ShortLink() {
       </div>
 
       <LinkTable
-        allLinks={allLinks}
         loading={loadingLinks}
         hasRows={coutRows}
         editUlr={editUlr}
+        allLinks={allLinks}
       />
 
       {show && (
