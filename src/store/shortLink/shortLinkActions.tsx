@@ -47,8 +47,6 @@ export const generateShortLink = createAsyncThunk<void, any>(
       const newUrl = await generateShortLinks(url?.url);
       await saveLink(url?.url, newUrl, "");
       thunkAPI.dispatch(shortLoading(false));
-      console.log();
-
       thunkAPI.dispatch(showLinks(url?.user.uid));
       Message.Success("Successfully");
     } catch (error) {
@@ -143,7 +141,6 @@ export const showDetail = createAsyncThunk<void, any>(
     try {
       thunkAPI.dispatch(geteditLoading(true));
       const item = await getDocumentDetails(data);
-      console.log(item);
       if (item) {
         await thunkAPI.dispatch(setDetailUrl(item));
       }

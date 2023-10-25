@@ -9,7 +9,9 @@ import {
   getDoc,
   deleteDoc,
   updateDoc,
+  limit,
 } from "firebase/firestore";
+
 import { database, auth, provider } from "../../firebase";
 import Date from "../../modules/shared/date";
 import Message from "../../modules/shared/Message";
@@ -17,7 +19,12 @@ import { signInWithPopup } from "@firebase/auth";
 
 export const fetchLinks = async (user) => {
   try {
-    const q = query(collection(database, "links"), where("userId", "==", user));
+    const q = query(
+      collection(database, "links"),
+      where("userId", "==", user),
+      limit(10) // Order by the "createdAt" field in descending order
+    );
+
     return new Promise<any[]>((resolve, reject) => {
       onSnapshot(
         q,
@@ -84,8 +91,6 @@ export const saveLink = async (original, short, idDoc) => {
 };
 
 export const deleteMultiLinks = async (id) => {
-  console.log(id);
-
   try {
     const docRef = doc(database, "multiLinks", id);
     const docSnapshot = await getDoc(docRef);

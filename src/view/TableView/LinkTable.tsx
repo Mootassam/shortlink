@@ -39,12 +39,10 @@ function LinkTable(props) {
   const deleteUrl = (id: number, user: any, idmulti: any) => {
     dispatch(deleteshortUrl({ id, user, idmulti }));
   };
-
   const edit = (id, index) => {
     setCurrentIndex(index);
     props.editUlr(id);
   };
-
   return (
     <div className="app__table">
       <table>

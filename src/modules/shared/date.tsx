@@ -2,10 +2,17 @@ import moment from "moment";
 
 class Date {
   static createdAt() {
-    const date = moment()
+    // Create a Date object using moment
+    const date = moment().toDate();
+    // Format the date for display
+    const formattedDate = moment(date)
       .utcOffset(4)
       .format("D MMMM YYYY [à] HH:mm:ss [UTC+4]");
-    return date;
+    return formattedDate;
+  }
+
+  static now() {
+    return moment().toDate();
   }
 
   static format(date: any) {

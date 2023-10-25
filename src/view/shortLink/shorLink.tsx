@@ -47,7 +47,6 @@ function ShortLink() {
   const [id, setId] = useState();
   const detaillurl = useSelector(sepecifDetail);
 
-  console.log(detaillurl, "FANTA ");
 
   const [form, setNewform] = useState<{ link: string }[]>([
     {
@@ -55,14 +54,10 @@ function ShortLink() {
     },
   ]);
   const editUlr = async (item: any) => {
-    console.log("item id ", item);
-
     try {
       if (item) {
         await dispatch(showDetail(item));
       }
-
-      console.log("item detaills", detaillurl); // This will now have the updated value
 
       if (item && detaillurl.length > 0) {
         setShow(true);
@@ -75,7 +70,6 @@ function ShortLink() {
   };
 
   useEffect(() => {
-    console.log("item detaills (from useEffect)", detaillurl);
     // Check detaillurl and other logic when it changes
     if (id && detaillurl.length > 0) {
       setShow(true);
