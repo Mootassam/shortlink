@@ -21,6 +21,8 @@ import {
   deleteLink,
   getDocumentDetails,
   shortUrlUpdate,
+  deleteShortLink,
+  deleteMultiLinks,
 } from "./shortLinkService";
 import Message from "../../modules/shared/Message";
 
@@ -99,6 +101,7 @@ export const deleteshortUrl = createAsyncThunk<void, any>(
     try {
       thunkAPI.dispatch(deleteLoading(true));
       await deleteLink(data?.id);
+      await deleteMultiLinks(data?.idmulti);
       thunkAPI.dispatch(showLinks(data?.user.uid));
       thunkAPI.dispatch(deleteLoading(false));
     } catch (error) {

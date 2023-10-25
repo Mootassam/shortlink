@@ -49,6 +49,18 @@ export const generateShortLinks = async (url: any) => {
   }
 };
 
+export const deleteShortLink = async (shortLink) => {
+  try {
+    const response = await authAxios.delete(`/delete?url=${shortLink}`);
+    if (response.status === 204) {
+      console.log("Short link deleted successfully");
+    } else {
+      console.log("Failed to delete the short link");
+    }
+  } catch (error) {
+    console.log("Error deleting the link:", error);
+  }
+};
 export const saveLink = async (original, short, idDoc) => {
   try {
     const user = auth.currentUser;
@@ -71,12 +83,27 @@ export const saveLink = async (original, short, idDoc) => {
   }
 };
 
+export const deleteMultiLinks = async (id) => {
+  console.log(id);
+
+  try {
+    const docRef = doc(database, "multiLinks", id);
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot.exists()) {
+      await deleteDoc(docRef);
+    }
+  } catch (error) {
+    console.error("Error deleting document:", error);
+    throw error;
+  }
+};
+
 export const deleteLink = async (docId) => {
   try {
     const user = auth.currentUser;
     if (user) {
       const docRef = doc(database, "links", docId);
-
       // Check if the document exists before attempting to delete
       const docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
@@ -128,8 +155,6 @@ export const logoutService = async () => {
   }
 };
 export const shortUrlUpdate = async (docId, updatedData) => {
-  console.log(docId);
-
   try {
     const docRef = doc(database, "multiLinks", docId);
     await updateDoc(docRef, { links: updatedData });

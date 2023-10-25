@@ -36,8 +36,8 @@ function LinkTable(props) {
     }, 2000);
   };
 
-  const deleteUrl = (id: number, user: any) => {
-    dispatch(deleteshortUrl({ id, user }));
+  const deleteUrl = (id: number, user: any, idmulti: any) => {
+    dispatch(deleteshortUrl({ id, user, idmulti }));
   };
 
   const edit = (id, index) => {
@@ -110,7 +110,6 @@ function LinkTable(props) {
                 </td>
                 <td>{Date.format(item.date)}</td>
                 <td className="actions__">
-                  {item.multiId}
                   <div className="edit" onClick={() => edit(item.multiId, i)}>
                     {loadingedit && currentIndex === i && (
                       <div className="spinnerdelete"></div>
@@ -127,7 +126,7 @@ function LinkTable(props) {
                   </div>
                   <div
                     className="delete"
-                    onClick={() => deleteUrl(item.id, user)}
+                    onClick={() => deleteUrl(item.id, user, item.multiId)}
                   >
                     {deleteLoadings === true ? (
                       <div className="spinnerdelete"></div>
