@@ -62,7 +62,6 @@ function ShortLink() {
         setShow(true);
         setUpdate(true);
         setId(item);
-        setNewform(detaillurl);
       }
     } catch (error) {
       // Handle errors
@@ -74,10 +73,15 @@ function ShortLink() {
     if (id && detaillurl.length > 0) {
       setShow(true);
       setUpdate(true);
-      setNewform(detaillurl);
-      // You can also perform additional operations here
     }
   }, [detaillurl]);
+
+  useEffect(() => {
+    if (update && detaillurl.length > 0) {
+      setNewform(detaillurl);
+    }
+  }, [update, detaillurl]);
+  
   const updateUrl = () => {
     dispatch(UrlUpdate({ id, form }));
   };
