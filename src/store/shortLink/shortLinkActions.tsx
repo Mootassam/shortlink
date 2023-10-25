@@ -21,7 +21,6 @@ import {
   deleteLink,
   getDocumentDetails,
   shortUrlUpdate,
-  deleteShortLink,
   deleteMultiLinks,
 } from "./shortLinkService";
 import Message from "../../modules/shared/Message";
