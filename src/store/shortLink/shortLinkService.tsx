@@ -5,20 +5,24 @@ import {
   query,
   addDoc,
   where,
-  doc,
   getDoc,
   deleteDoc,
   updateDoc,
   limit,
+  doc,
 } from "firebase/firestore";
 
 import { database, auth, provider } from "../../firebase";
 import Date from "../../modules/shared/date";
 import Message from "../../modules/shared/Message";
 import { signInWithPopup } from "@firebase/auth";
+import axios from "axios";
 
 export const fetchLinks = async (user) => {
   try {
+    if (!user) {
+      return "";
+    }
     const q = query(
       collection(database, "links"),
       where("userId", "==", user),
@@ -44,6 +48,34 @@ export const fetchLinks = async (user) => {
     // Handle any errors here
     console.error("Error fetching data:", error);
     throw error; // Rethrow the error to handle it at a higher level if needed
+  }
+};
+
+export const SearchUrl = async (shortUrl) => {
+  try {
+    return new Promise(async (resolve, reject) => {
+      const q = query(
+        collection(database, "links"),
+        where("shortlink", "==", shortUrl)
+        // Order by the "createdAt" field in descending order
+      );
+      onSnapshot(
+        q,
+        (querySnapshot) => {
+          const data = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          resolve(data); // Resolve the promise with the updated data
+        },
+        (error) => {
+          reject(error); // Reject the promise if there's an error
+        }
+      );
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 };
 
@@ -134,6 +166,7 @@ export const saveMulti = async (original) => {
         date: Date.createdAt(),
         links: original,
         status: "active",
+        currentIndex: 0,
       });
       resolve(idDoc.id);
       reject((error) => {
@@ -188,4 +221,25 @@ export const getDocumentDetails = (docId) => {
       reject(error);
     }
   });
+};
+
+export const send = async (links) => {
+  try {
+    const response = await axios.post("http://192.168.20.100:3000/api/send", {
+      links,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const UpdateCurrentIndex = async (index, docId) => {
+  try {
+    const docRef = doc(database, "multiLinks", docId);
+    await updateDoc(docRef, { currentIndex: index });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };

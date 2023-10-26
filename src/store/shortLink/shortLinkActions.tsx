@@ -10,6 +10,8 @@ import {
   getUpdateLoading,
   setDetailUrl,
   geteditLoading,
+  getSearchLoading,
+  setSearch,
 } from "./shortLinkReducers";
 import {
   generateShortLinks,
@@ -22,6 +24,7 @@ import {
   getDocumentDetails,
   shortUrlUpdate,
   deleteMultiLinks,
+  SearchUrl
 } from "./shortLinkService";
 import Message from "../../modules/shared/Message";
 
@@ -147,6 +150,22 @@ export const showDetail = createAsyncThunk<void, any>(
       thunkAPI.dispatch(geteditLoading(false));
     } catch (error) {
       thunkAPI.dispatch(geteditLoading(false));
+      throw error;
+    }
+  }
+);
+
+
+export const Search = createAsyncThunk<void, any>(
+  "url/search",
+  async (data, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(getSearchLoading(true));
+      const item = await SearchUrl(data);
+      await thunkAPI.dispatch(setSearch(item));
+      thunkAPI.dispatch(getSearchLoading(false));
+    } catch (error) {
+      thunkAPI.dispatch(getSearchLoading(false));
       throw error;
     }
   }

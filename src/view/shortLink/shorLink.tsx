@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   LoginIn,
   Logout,
+  Search,
   UrlUpdate,
   generateShortLink,
   generateShortMulti,
@@ -21,6 +22,7 @@ import {
   fetchLoading,
   hasRows,
   listLinks,
+  loadingSearch,
   loginLoading,
   multiLoading,
   sepecifDetail,
@@ -46,6 +48,8 @@ function ShortLink() {
   const loadingUpdate = useSelector(LoadingUpdate);
   const [id, setId] = useState();
   const detaillurl = useSelector(sepecifDetail);
+  const searchLoader = useSelector(loadingSearch);
+
 
   const [form, setNewform] = useState<{ link: string }[]>([
     {
@@ -131,14 +135,14 @@ function ShortLink() {
     return trimmedUrl;
   }
 
-  const generateShortUrl = async () => {
+  const searchShortUrl = async () => {
     try {
       if (!user) {
         Message.Error("Please Login ");
       }
       const trimmedUrl = validateAndTrimURL(url);
       // Assuming `dispatch` and `generateShortLink` are defined elsewhere
-      await dispatch(generateShortLink({ url: trimmedUrl, user }));
+      await dispatch(Search(trimmedUrl));
     } catch (error) {
       Message.Error(
         "Please Verify your data its look like this format https//example.com "
@@ -283,15 +287,15 @@ function ShortLink() {
                 onChange={() => handletext(event)}
                 typeof="url"
                 required
-                placeholder="Enter the link here"
+                placeholder="Enter the Short Link"
               />
             </div>
-            <div className="short__now" onClick={() => generateShortUrl()}>
-              {!shortLoadign && <>Shorten Now!</>}
+            <div className="short__now" onClick={() => searchShortUrl()}>
+              {!searchLoader && <>Search Now!</>}
 
-              {shortLoadign && (
+              {searchLoader && (
                 <div className="shorten">
-                  Shorten ... <div className="spinners"></div>{" "}
+                  Searching ... <div className="spinners"></div>{" "}
                 </div>
               )}
             </div>

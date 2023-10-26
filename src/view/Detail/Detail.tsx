@@ -2,23 +2,31 @@ import { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { database } from "../../firebase";
 import { useParams } from "react-router-dom";
+import { UpdateCurrentIndex } from "../../store/shortLink/shortLinkService";
 
 function Detail() {
   const { parameter } = useParams();
-  const [links, setLinks] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [links, setLinks] = useState<string[] | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (parameter) {
       const fetchLinks = async () => {
         try {
-          const docRef = doc(database, "multiLinks", parameter); // Use the parameter as the document ID
+          const docRef = doc(database, "multiLinks", parameter);
           const docSnapshot = await getDoc(docRef);
 
           if (docSnapshot.exists()) {
             const data = docSnapshot.data();
-            if (data.links) {
-              const newLinks = data.links.map((item: any) => item.link);
+            const linksData = data?.links || [];
+            const currentIndex = data?.currentIndex || 0;
+
+            if (linksData.length > 0) {
+              const newIndex = currentIndex < linksData.length - 1 ? currentIndex + 1 : 0;
+              setCurrentIndex(newIndex);
+              await UpdateCurrentIndex(newIndex, parameter);
+              const newLinks = linksData.map((item: any) => item.link);
               setLinks(newLinks);
             } else {
               console.log("No links found in the document.");
@@ -38,19 +46,20 @@ function Detail() {
   }, [parameter]);
 
   useEffect(() => {
-    if (!loading && links.length > 0) {
-      const lastVisitedIndex = parseInt(
-        localStorage.getItem("lastVisitedIndex") || "0",
-        10
-      );
-      const nextIndex = (lastVisitedIndex + 1) % links.length;
-      const urlToVisit = links[nextIndex];
-      localStorage.setItem("lastVisitedIndex", nextIndex.toString());
-      window.location.replace(urlToVisit);
-    }
-  }, [loading, links]);
+    if (!loading && links && links.length > 0 && currentIndex !== null) {
+      // Preload the destination page for faster redirection
+      const preloadLink = document.createElement("link");
+      preloadLink.href = links[currentIndex];
+      preloadLink.rel = "preload";
+      preloadLink.as = "document";
+      document.head.appendChild(preloadLink);
 
-  return <></>;
+      // Perform the actual redirection
+      window.location.replace(links[currentIndex]);
+    }
+  }, [loading, links, currentIndex]);
+
+  return null;
 }
 
 export default Detail;

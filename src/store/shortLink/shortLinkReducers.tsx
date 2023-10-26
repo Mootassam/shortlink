@@ -11,6 +11,7 @@ const generateSlice = createSlice({
     loadingremove: false,
     updateLoading: false,
     editLoading: false,
+    searchLoading: false,
     links: [],
     linksDetail: [],
   },
@@ -40,6 +41,9 @@ const generateSlice = createSlice({
       state.links = actions.payload;
     },
 
+    setSearch: (state, actions) => {
+      state.links = actions.payload;
+    },
     getUpdateLoading: (state, actions) => {
       state.updateLoading = actions.payload;
     },
@@ -50,6 +54,9 @@ const generateSlice = createSlice({
 
     geteditLoading: (state, actions) => {
       state.editLoading = actions.payload;
+    },
+    getSearchLoading: (state, actions) => {
+      state.searchLoading = actions.payload;
     },
   },
 });
@@ -65,6 +72,8 @@ export const {
   getUpdateLoading,
   setDetailUrl,
   geteditLoading,
+  getSearchLoading,
+  setSearch
 } = generateSlice.actions;
 
 export default generateSlice.reducer;

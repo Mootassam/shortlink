@@ -58,3 +58,8 @@ export const editLoading = createSelector(
   selectState,
   (state) => state.editLoading
 );
+
+export const loadingSearch = createSelector(
+  selectState,
+  (state) => state.searchLoading
+);
