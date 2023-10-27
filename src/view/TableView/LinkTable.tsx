@@ -66,15 +66,17 @@ function LinkTable({ allLinks, loading, hasRows, editUlr }) {
           <tbody>
             {allLinks?.map((item: any, i: number) => (
               <tr key={i}>
-                <td className="td__detail">
-                  {item.shortlink}
-                  <div
-                    className={`copy ${
-                      copySuccess && selected === i ? "copied" : ""
-                    }`}
-                    onClick={() => handleCopy(item.shortlink, i)}
-                  >
-                    <img src="/copy.png" alt="" />
+                <td>
+                  <div className="td__detail">
+                    <div className="shortlinks">{item.shortlink}</div>
+                    <div
+                      className={`copy ${
+                        copySuccess && selected === i ? "copied" : ""
+                      }`}
+                      onClick={() => handleCopy(item.shortlink, i)}
+                    >
+                      <img src="/copy.png" alt="" />
+                    </div>
                   </div>
                 </td>
                 {/* <td className="original__link">{item.originallink}</td> */}

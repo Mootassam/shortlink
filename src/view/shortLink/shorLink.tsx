@@ -10,7 +10,6 @@ import {
   Logout,
   Search,
   UrlUpdate,
-  generateShortLink,
   generateShortMulti,
   showDetail,
   showLinks,
@@ -26,7 +25,6 @@ import {
   loginLoading,
   multiLoading,
   sepecifDetail,
-  shortLoading,
 } from "../../store/shortLink/shortLinkSelectors";
 import LinkTable from "../TableView/LinkTable";
 import { Toaster } from "react-hot-toast";
@@ -41,7 +39,6 @@ function ShortLink() {
   const loadingLinks = useSelector(fetchLoading);
   const allLinks = useSelector(listLinks);
   const coutRows = useSelector(hasRows);
-  const shortLoadign = useSelector(shortLoading);
   const loadingMulti = useSelector(multiLoading);
   const LoadingLogin = useSelector(loginLoading);
   const [update, setUpdate] = useState(false);
@@ -49,7 +46,6 @@ function ShortLink() {
   const [id, setId] = useState();
   const detaillurl = useSelector(sepecifDetail);
   const searchLoader = useSelector(loadingSearch);
-
 
   const [form, setNewform] = useState<{ link: string }[]>([
     {
@@ -85,7 +81,7 @@ function ShortLink() {
       setNewform(detaillurl);
     }
   }, [update, detaillurl]);
-  
+
   const updateUrl = () => {
     dispatch(UrlUpdate({ id, form }));
   };
@@ -200,8 +196,13 @@ function ShortLink() {
   };
   const removeFields = (index: number) => {
     let formDelete = [...form];
-    formDelete.splice(index, 1);
-    setNewform(formDelete);
+
+    if (formDelete.length == 1) {
+      Message.Error("Should be less 1 value their")
+    } else {
+      formDelete.splice(index, 1);
+      setNewform(formDelete);
+    }
   };
 
   const handleChange = (
@@ -348,7 +349,7 @@ function ShortLink() {
                       }}
                     />
                   </div>
-                  {index ? (
+                  {index > -1 ? (
                     <div className="cancel" onClick={() => removeFields(index)}>
                       <i className="fa-solid fa-minus"></i>
                     </div>
