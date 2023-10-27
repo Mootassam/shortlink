@@ -544,7 +544,7 @@ td {
   position: absolute;
   bottom: 0;
   background-color: #181b20;
-  width: 493.516px;
+  width: 100%;
   padding: 15px;
 }
 
@@ -857,6 +857,10 @@ td {
     max-width: 330.433px;
   }
 
+  .app__sidebar {
+    width: 376px;
+  }
+
   .content__span {
     display: flex;
     width: 358px;
@@ -916,7 +920,7 @@ td {
 
   .short__now {
     display: flex;
-    width: 45px;
+    width: 130px;
     height: 45px;
     padding: 21px 25.047px 21px 25px;
     justify-content: center;
@@ -937,6 +941,14 @@ td {
     height: 30px;
   }
 
+  .cancel {
+    width: max-content;
+    height: max-content;
+    padding: 5px;
+  }
+  .circle {
+    height: 40px;
+  }
   /* Add more responsive styles as needed */
 }
 
