@@ -23,7 +23,8 @@ function Detail() {
             const currentIndex = data?.currentIndex || 0;
 
             if (linksData.length > 0) {
-              const newIndex = currentIndex < linksData.length - 1 ? currentIndex + 1 : 0;
+              const newIndex =
+                currentIndex < linksData.length - 1 ? currentIndex + 1 : 0;
               setCurrentIndex(newIndex);
               await UpdateCurrentIndex(newIndex, parameter);
               const newLinks = linksData.map((item: any) => item.link);
@@ -59,7 +60,11 @@ function Detail() {
     }
   }, [loading, links, currentIndex]);
 
-  return null;
+  return (
+    <div className="body__detail">
+      <div className="spinner"></div>
+    </div>
+  );
 }
 
 export default Detail;
